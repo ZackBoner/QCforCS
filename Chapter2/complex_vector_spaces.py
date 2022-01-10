@@ -97,11 +97,9 @@ class ComplexVector:
 
     def is_unitary(self):
         if self.shape()[0] != self.shape()[1]:
-            raise ValueError("Matrix must be square to check if it is hermitian.")
-
+            raise ValueError("Matrix must be square to check if it is unitary.")
         n = self.shape()[0]
-        identity_matrix = np.array(
-            [[1 if i == j else 0 for i in range(n) for j in range(n)]])
+        identity_matrix = np.identity(n)
         # an nxn matrix U is unitary if U*adjoint(U) = adjoint(U)*U = In
         return np.array_equal((self * self.adjoint()).vector, identity_matrix) and np.array_equal(
             (self.adjoint() * self).vector, identity_matrix)

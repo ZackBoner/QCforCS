@@ -1,5 +1,6 @@
 import math
 import re
+from typing import Tuple
 
 
 class Complex:
@@ -115,7 +116,7 @@ class Complex:
         theta = power * theta
         return self.frompolar(ro, theta)
 
-    def nth_root(self, n) -> (float, list):
+    def nth_root(self, n) -> Tuple[float, list]:
         if not isinstance(n, int):
             raise TypeError("To take nth root, pass in an integer n.")
         ro, theta = self.get_polar_coordinates()
