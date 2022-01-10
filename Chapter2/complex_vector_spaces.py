@@ -92,12 +92,14 @@ class ComplexVector:
 
     def is_hermitian(self):
         if self.shape()[0] != self.shape()[1]:
-            raise ValueError("Matrix must be square to check if it is hermitian.")
+            raise ValueError(
+                "Matrix must be square to check if it is hermitian.")
         return np.array_equal(self.adjoint().vector, self.vector)
 
     def is_unitary(self):
         if self.shape()[0] != self.shape()[1]:
-            raise ValueError("Matrix must be square to check if it is unitary.")
+            raise ValueError(
+                "Matrix must be square to check if it is unitary.")
         n = self.shape()[0]
         identity_matrix = np.identity(n)
         # an nxn matrix U is unitary if U*adjoint(U) = adjoint(U)*U = In
@@ -109,7 +111,8 @@ class ComplexVector:
 
 
 if __name__ == '__main__':
-    m, n = int(input("Enter number of rows.")), int(input("Enter number of columns."))
+    m, n = int(input("Enter number of rows.")), int(
+        input("Enter number of columns."))
 
     c1 = list()
     for rdx in range(m):
@@ -123,7 +126,8 @@ if __name__ == '__main__':
     print(c1)
     print()
 
-    j, k = int(input("Enter number of rows.")), int(input("Enter number of columns."))
+    j, k = int(input("Enter number of rows.")), int(
+        input("Enter number of columns."))
     c2 = list()
     for rdx in range(j):
         row = []

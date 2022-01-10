@@ -84,7 +84,8 @@ class Complex:
 
         denominator = other.real ** 2 + other.imag ** 2
         real = (self.real * other.real + self.imag * other.imag) / denominator
-        imaginary = (other.real * self.imag - self.real * other.imag) / denominator
+        imaginary = (other.real * self.imag -
+                     self.real * other.imag) / denominator
 
         return self.fromparameters(real, imaginary)
 
@@ -129,7 +130,8 @@ class Complex:
 
     def print_polar_coordinates(self):
         ro, theta = self.get_polar_coordinates()
-        print(f"Polar Coordinates of ({self}):\np: {ro:.2f}\ntheta: {theta:.2f}")
+        print(
+            f"Polar Coordinates of ({self}):\np: {ro:.2f}\ntheta: {theta:.2f}")
 
     def __str__(self):
         return f"{self.real} + {self.imag}i"
