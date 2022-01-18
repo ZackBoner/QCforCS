@@ -5,9 +5,6 @@ def dot(v1, v2):
     # v1 and v2 should be of type ComplexVector
     if not isinstance(v1, ComplexVector) or not isinstance(v2, ComplexVector):
         raise TypeError("v1 and v2 should be ComplexVector's")
-    # the shapes should align
-    if v1.shape()[1] != v2.shape()[0]:
-        raise ValueError("Misaligned shapes for matrix multiplication.")
 
     return ComplexVector(np.dot(v1.vector, v2.vector))
 
@@ -16,13 +13,10 @@ def nvector_inner_product(v1, v2, debug=False):
     # v1 and v2 should be of type ComplexVector
     if not isinstance(v1, ComplexVector) or not isinstance(v2, ComplexVector):
         raise TypeError("v1 and v2 should be ComplexVector's")
-    # v1 and v2 should also be column vectors
-    if v1.shape()[1] != 1 or v2.shape()[1] != 1:
-        raise ValueError("v1 or v2 is not a column vector")
 
     if debug:
-        print(v1.shape(), v2.shape())
-        print(v1.adjoint().shape())
+        print(v1.shape, v2.shape)
+        print(v1.adjoint().shape)
 
     return dot(v1.adjoint(), v2).vector[0, 0]
 
@@ -32,7 +26,7 @@ def distance(v1, v2):
     if not isinstance(v1, ComplexVector) or not isinstance(v2, ComplexVector):
         raise TypeError("v1 and v2 should be ComplexVector's")
     # check shape
-    if v1.shape()[0] != v2.shape()[0] or v1.shape()[1] != v2.shape()[1]:
+    if v1.shape[0] != v2.shape[0] or v1.shape[1] != v2.shape[1]:
         raise ValueError("v1 and v2 must have the same shape")
 
     return np.sqrt(nvector_inner_product(v1 - v2, v1 - v2))
@@ -50,12 +44,18 @@ def tensor_product(v1, v2):
 
 class ComplexVector:
     def __init__(self, vector):
-        if not isinstance(vector, (list, tuple, type(np.array([])))):
-            raise TypeError("Invalid input to ComplexVector constructor.")
-        self.vector = np.array(vector)
+        if not isinstance(vector, (list, tuple, np.ndarray, ComplexVector)):
+            raise TypeError(f"""Invalid input to ComplexVector constructor.
+                              Inputted type: {type(vector)}""")
+        if isinstance(vector, ComplexVector):
+            self.vector = vector.vector
+            self.shape = vector.shape
+        else:
+            self.vector = np.array(vector)
+            self.shape = self.vector.shape
 
-    def shape(self):
-        return self.vector.shape
+    def __getitem__(self, idx):
+        return self.vector[idx]
 
     def __len__(self):
         return len(self.vector)
@@ -78,8 +78,14 @@ class ComplexVector:
             raise TypeError("Must subtract ComplexVector objects.")
         return self + -other
 
-    def norm(self, inner_product_func):
-        return np.sqrt(inner_product_func(self, self))
+    def __truediv__(self, num: float):
+        return ComplexVector(self.vector/num)
+        
+    def as_column_vector(self):
+        return ComplexVector(self.vector.reshape(-1, 1))
+
+    def norm(self, inner_product_func=nvector_inner_product):
+        return np.sqrt(inner_product_func(self, self).real)
 
     def transpose(self):
         return ComplexVector(np.transpose(self.vector))
@@ -91,23 +97,26 @@ class ComplexVector:
         return self.conjugate().transpose()
 
     def is_hermitian(self):
-        if self.shape()[0] != self.shape()[1]:
+        if self.shape[0] != self.shape[1]:
             raise ValueError(
                 "Matrix must be square to check if it is hermitian.")
         return np.array_equal(self.adjoint().vector, self.vector)
 
     def is_unitary(self):
-        if self.shape()[0] != self.shape()[1]:
+        if self.shape[0] != self.shape[1]:
             raise ValueError(
                 "Matrix must be square to check if it is unitary.")
-        n = self.shape()[0]
+        n = self.shape[0]
         identity_matrix = np.identity(n)
         # an nxn matrix U is unitary if U*adjoint(U) = adjoint(U)*U = In
         return np.array_equal((self * self.adjoint()).vector, identity_matrix) and np.array_equal(
             (self.adjoint() * self).vector, identity_matrix)
 
     def __str__(self):
-        return str(self.vector)
+        return f"ComplexVector(vector={self.vector}, shape={self.shape})"
+
+    def __repr__(self):
+        return self.__str__()
 
 
 if __name__ == '__main__':

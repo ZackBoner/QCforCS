@@ -136,6 +136,8 @@ class Complex:
     def __str__(self):
         return f"{self.real} + {self.imag}i"
 
+    def __repr__(self):
+        return self.__str__()
 
 if __name__ == '__main__':
     num1 = Complex.fromparameters(1, 2)
