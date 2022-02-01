@@ -2,6 +2,7 @@
 
 Repository for managing the code I write as I work through the textbook Quantum Computing for Computer Scientists by Yanofsky and Mannucci.
 I have made an effort to write decent code in an object oriented structure, although I have neglected stringent testing as it really isn't in the spirit of this textbook's exercises.
+If, for whatever reason, you'd like to run my code, note that it must be run with the command `-m` flag in the python command, as I have not set up package structure for this repository.
 
 Chapter 1: Explore complex numbers and the operations you can perform on them.
 The code in this section is not re-used, since Python's implemented complex data type is better suited for use inside of numpy arrays.
